@@ -1,10 +1,10 @@
 {
-  "input_records": 1623,
+  "input_records": 1792,
   "rejected_a_invalid_json": 0,
   "rejected_b_bad_keys": 1,
   "rejected_c_bad_intent": 3,
-  "rejected_d_bad_slot": 55,
-  "rejected_e_duplicates": 8,
-  "records_kept": 1556,
+  "rejected_d_bad_slot": 61,
+  "rejected_e_duplicates": 10,
+  "records_kept": 1717,
   "checksum_formula_valid": true
 }

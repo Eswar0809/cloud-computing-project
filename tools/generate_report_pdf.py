@@ -192,12 +192,12 @@ def build_report():
     story.append(Paragraph("<b>Implementation, Cleaning & Measured Results:</b>", h2_style))
     story.append(Paragraph(
         "Raw teacher completions were processed through a deterministic multi-stage cleaning pipeline (<font face='Courier'>worker/clean.py</font>): "
-        "(a) stripping markdown formatting/codeblocks, (b) schema validation requiring exactly 4 keys (<font face='Courier'>intent, date, time, place</font>) "
-        "and 8 valid intents, (c) slot constraint enforcement (literal string matching without prepositions, null for unmentioned slots), "
-        "and (d) deduplication across duplicate IDs. The pipeline strictly preserved the invariant: "
-        "<b>Input (1,775) = (a) Markdown (3) + (b) Schema (6) + (c) Slots (0) + Duplicates (210) + Cleaned (1,556)</b>.<br/>"
+        "(a) stripping markdown formatting/codeblocks and verifying valid JSON syntax, (b) schema validation requiring exactly 4 keys (<font face='Courier'>intent, date, time, place</font>), "
+        "(c) intent verification against the 8 valid intents, (d) slot constraint enforcement (literal string matching without prepositions, null for unmentioned slots), "
+        "and (e) deduplication across duplicate IDs (preserving smallest ID). The pipeline strictly preserved the invariant: "
+        "<b>Input (1,792) = (a) Invalid JSON (0) + (b) Bad Keys (1) + (c) Bad Intent (3) + (d) Bad Slot (61) + (e) Duplicates (10) + Kept (1,717)</b>.<br/>"
         "The cleaned training dataset was stored at <font face='Courier'>datasets/v1/train.jsonl</font> with SHA-256 checksum: "
-        "<font face='Courier'>02ce7de3287854831254b7a7257cbf0beddfc4d1ee97b086e405bde24fb80df9</font> and uploaded to SeaweedFS S3.",
+        "<font face='Courier'>b6e8e5ddad44ee3e5c7bfa6b2fac230befc3b6c09ae80a29f4ce6597bea5aacf</font> and uploaded to SeaweedFS S3.",
         body_style
     ))
 
@@ -789,7 +789,7 @@ def build_report():
         ],
         [
             Paragraph("<b>Data and storage</b>", meta_style),
-            Paragraph("1,775 commands generated; 1,556 cleaned records (SHA-256: 02ce7de3...)", meta_style),
+            Paragraph("1,792 commands processed; 1,717 cleaned records (SHA-256: b6e8e5dd...)", meta_style),
             Paragraph("SeaweedFS volume.max=8 default saturated on local node.", meta_style),
             Paragraph("Configure -volume.max=50 and distributed volume servers across disk mounts.", meta_style)
         ],
@@ -917,7 +917,7 @@ def build_report():
     story.append(Paragraph(
         "• <font face='Courier'>models/v1/model.sha256</font>: <font face='Courier'>95053ae63c454e1d5b57a8dc9cbdc5483304e61dea7b7ba10e4eee0e679e1452</font><br/>"
         "• <font face='Courier'>models/v2/model.sha256</font>: <font face='Courier'>9d8678e277dad0b4c5630b326a6178e3ae9cb292ec216c8207f41d15f1e2c47a</font><br/>"
-        "• <font face='Courier'>datasets/v1/train.sha256</font>: <font face='Courier'>02ce7de3287854831254b7a7257cbf0beddfc4d1ee97b086e405bde24fb80df9</font><br/>"
+        "• <font face='Courier'>datasets/v1/train.sha256</font>: <font face='Courier'>b6e8e5ddad44ee3e5c7bfa6b2fac230befc3b6c09ae80a29f4ce6597bea5aacf</font><br/>"
         "• <b>GitHub Release:</b> All trained safetensors weights, tokenizer vocabularies, and config manifests are published under tag <font face='Courier'>v1.0.0</font>.",
         body_style
     ))

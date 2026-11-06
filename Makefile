@@ -14,11 +14,11 @@ down:
 	k3d cluster delete mycluster
 
 train:
-	@if [ -n "$(SUBSET)" ]; then \
-		python training/train.py --subset $(SUBSET); \
-	else \
-		python training/train.py; \
-	fi
+ifdef SUBSET
+	python training/train.py --subset $(SUBSET)
+else
+	python training/train.py
+endif
 
 test:
 	pytest tests/ -v
