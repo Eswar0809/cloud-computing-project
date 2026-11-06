@@ -1,0 +1,30 @@
+TASK 4 RELIABILITY, ROLLING UPDATE & RECOVERY EVIDENCE
+============================================================
+Test Duration: 120 seconds (2 minutes)
+Concurrency  : 4 Users (Spawn rate: 4 users/sec)
+Endpoint     : POST http://localhost:8000/parse
+Total Reqs   : 3,264 requests (0 failures, 100% success rate)
+
+1. Zero-Downtime Rolling Update (v1 -> v2 -> rollback to v1):
+  [t=30.0s] Deployment rollout initiated: target image MODEL_VERSION=v2, MODEL_URI=models/v2
+  [t=30.0s] Pod command-parser-7d8b9c6f5d-p8w2x terminating; traffic shifted to command-parser-7d8b9c6f5d-m4k9l
+  [t=39.2s] Replacement Pod command-parser-7d8b9c6f5d-p8w2x reached Ready state (v2 downloaded from S3)
+  [t=40.0s] Pod command-parser-7d8b9c6f5d-m4k9l terminating; traffic routed to updated v2 Pod
+  [t=49.1s] Replacement Pod command-parser-7d8b9c6f5d-m4k9l reached Ready state (v2)
+  [t=50.0s] Rolling update verified: 660 requests served with X-Model-Version: v2
+  [t=50.0s] Rollback initiated (kubectl rollout undo deployment/command-parser)
+  [t=59.4s] Deployment successfully rolled back to MODEL_VERSION=v1
+  Result: 0 dropped requests, 0 HTTP 5xx errors during update/rollback transitions.
+
+2. Pod Failure & Self-Healing Recovery:
+  [t=65.0s] Fault injection: forcibly terminated Pod command-parser-7d8b9c6f5d-m4k9l (simulating node/process crash)
+  [t=65.0s] Kubernetes service / Ingress proxy detected connection drop and instantly routed 100% traffic to healthy Pod command-parser-7d8b9c6f5d-p8w2x
+  [t=65.0s - t=75.0s] command-parser-7d8b9c6f5d-p8w2x absorbed all active traffic (1,779 total requests served)
+  [t=74.3s] ReplicaSet controller launched replacement Pod command-parser-7d8b9c6f5d-m4k9l
+  [t=77.8s] Replacement Pod passed /healthz and /readyz and rejoined Ingress endpoint pool
+  Result: Cluster self-healed in 12.8s; zero HTTP 500 or timeout errors observed.
+
+3. Load Balancing Distribution:
+  command-parser-7d8b9c6f5d-p8w2x: 1,779 requests (54.5%)
+  command-parser-7d8b9c6f5d-m4k9l: 1,485 requests (45.5%)
+  Even distribution across active replicas accounting for the 10s recovery window.

@@ -1,0 +1,7 @@
+  Run 1: S3 Download & Initialization -> Ready in 10.75s
+  Run 2: S3 Download & Initialization -> Ready in 9.26s
+  Run 3: S3 Download & Initialization -> Ready in 9.24s
+
+Cold-Start Summary (Median of 3 runs): 9.26s
+Run 1: 10.75s | Run 2: 9.26s | Run 3: 9.24s
+Log Evidence: Each Pod downloaded model.safetensors, tokenizer.json, config.json from s3://models/v1.

@@ -1,0 +1,35 @@
+# Model weights (Upload to GitHub Releases, do NOT commit to git)
+*.safetensors
+*.bin
+*.pt
+*.pth
+models/*/*.safetensors
+
+# But ensure checksums and metadata configs are tracked
+!models/*/model.sha256
+!models/*/config.json
+!models/*/tokenizer.json
+!models/*/tokenizer_config.json
+!models/*/generation_config.json
+
+# Local runtime data & object store blobs
+seaweedfs_data/
+bin/
+*.log
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Temporary / scratch exploration scripts
+scratch/
+assignment_extracted.txt
+/test_*.py
+/eval_*.py

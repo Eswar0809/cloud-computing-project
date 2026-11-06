@@ -1,0 +1,47 @@
+Inference Service Process PID: 10176
+Resource Limits Applied: 1 vCPU (CPU affinity / thread limit), 1.0 GiB (1024 MiB) RAM limit
+
+Waiting for service startup and S3 model retrieval at /readyz...
+Service READY in 13.08s (HTTP 200 from /readyz)
+Liveness Check (/healthz): HTTP 200 - {'status': 'ok'}
+
+Initial Baseline RSS Memory (Model Loaded): 458.18 MiB
+Loaded 50 sequential requests from data/validation.jsonl
+
+Dispatching 50 sequential requests to POST /parse...
+-----------------------------------------------------------------
+Req#   Status   Latency    Mem (RSS)    Intent             Served-By
+-----------------------------------------------------------------
+1      200        169.6ms     548.2 MiB   calendar_remove    command-parser-pod-replica-1
+10     200         54.4ms     550.8 MiB   datetime_query     command-parser-pod-replica-1
+20     200         65.6ms     552.4 MiB   weather_query      command-parser-pod-replica-1
+30     200         55.7ms     552.8 MiB   alarm_set          command-parser-pod-replica-1
+40     200         83.7ms     553.4 MiB   alarm_set          command-parser-pod-replica-1
+50     200         78.2ms     554.0 MiB   calendar_set       command-parser-pod-replica-1
+-----------------------------------------------------------------
+
+=================================================================
+ 50-REQUEST BENCHMARK & MEMORY PROFILING RESULTS
+=================================================================
+Requests Completed Successfully: 50 / 50 (100.0%)
+Initial RSS Memory             : 458.18 MiB
+Final RSS Memory               : 554.00 MiB
+Peak RSS Memory Observed       : 554.00 MiB
+Configured Limit (1 GiB)       : 1024.00 MiB
+Headroom under 1 GiB Limit     : 470.00 MiB (45.9%)
+Average Request Latency        : 70.13 ms
+Median (p50) Latency           : 65.33 ms
+95th Percentile (p95) Latency  : 94.52 ms
+Out-of-Memory (OOM) Kills      : 0 (No crashes, fully stable)
+
+=================================================================
+ FAULT INJECTION VALIDATION (FAULT_INJECT=1)
+=================================================================
+Restarting service with FAULT_INJECT=1 to verify schema error enforcement...
+Fault Injection Request (POST /parse):
+  HTTP Status Code : 500 (Expected: 500)
+  Response Body    : {"error":"invalid_model_output"} (Expected: {"error": "invalid_model_output"})
+  X-Model-Version  : v1
+  X-Served-By      : command-parser-pod-replica-1
+
+Fault Injection Verification: PASSED (Exact specification met)
