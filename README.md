@@ -92,8 +92,6 @@ This repository contains the end-to-end implementation of sequence-level knowled
 ├── worker/
 │   ├── clean.py             # Multi-stage cleaning & validation script
 │   └── worker.py            # Parallel teacher labeling worker
-├── 230101086.pdf            # Handwritten scanned reflection (strictly 3 pages)
-├── report/report.pdf        # Comprehensive project report (8 pages + appendices)
 ├── AI_USE.md                # AI transparency & human verification documentation
 ├── Makefile                 # Automation targets (up, down, train, test, lint)
 └── README.md                # Project documentation
