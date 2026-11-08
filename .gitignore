@@ -33,3 +33,8 @@ scratch/
 assignment_extracted.txt
 /test_*.py
 /eval_*.py
+
+# PDFs and PDF generation scripts (per user instruction)
+*.pdf
+report/
+tools/generate_*_pdf.py
