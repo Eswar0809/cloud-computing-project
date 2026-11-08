@@ -200,3 +200,4 @@ In compliance with project specifications prohibiting large binary files in git 
   - `models/v2/model.sha256`: `9d8678e277dad0b4c5630b326a6178e3ae9cb292ec216c8207f41d15f1e2c47a`
   - `datasets/v1/train.sha256`: `b6e8e5ddad44ee3e5c7bfa6b2fac230befc3b6c09ae80a29f4ce6597bea5aacf`
 
+# cloud-computing-project
