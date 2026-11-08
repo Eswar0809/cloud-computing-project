@@ -1,9 +1,9 @@
 # Cloud Command Parser: Knowledge Distillation and Deployment on a Local Cloud
 **CS3081 Cloud Computing — Mini Project**
 
-- **Student Name:** Nemapu Navaneeth
-- **Roll Number:** 230101086
-- **GitHub Repository:** [https://github.com/NavaneethNemapu/Cloud-Command-Parser](https://github.com/NavaneethNemapu/Cloud-Command-Parser)
+- **Student Name:** Chittoju Eswar Chandra vidya sagar
+- **Roll Number:** 230101087
+- **GitHub Repository:** [https://github.com/Eswar0809/cloud-computing-project](https://github.com/Eswar0809/cloud-computing-project)
 - **Submission Tag:** `final`
 
 ---
@@ -79,6 +79,8 @@ This repository contains the end-to-end implementation of sequence-level knowled
 ├── tests/
 │   └── test_service.py      # Unit test suite (5 comprehensive tests)
 ├── tools/
+│   ├── generate_reflection_pdf.py # Generates 230101087.pdf (3-page reflection)
+│   ├── generate_report_pdf.py     # Generates report/report.pdf (9-page report)
 │   ├── locustfile.py        # Locust load test script
 │   ├── nacl_sim.py          # Stateless NACL packet simulator
 │   ├── profile_memory.py    # Memory and resource profiling tool
@@ -92,6 +94,9 @@ This repository contains the end-to-end implementation of sequence-level knowled
 ├── worker/
 │   ├── clean.py             # Multi-stage cleaning & validation script
 │   └── worker.py            # Parallel teacher labeling worker
+├── 230101087.pdf            # 3-page scanned reflection deliverable
+├── report/
+│   └── report.pdf           # 9-page comprehensive engineering report
 ├── AI_USE.md                # AI transparency & human verification documentation
 ├── Makefile                 # Automation targets (up, down, train, test, lint)
 └── README.md                # Project documentation
@@ -157,6 +162,15 @@ Generates `results/loadtest_stats.csv` and `results/loadtest_headers.json`.
 python tools/nacl_sim.py network/nacl.json network/packets_sample.jsonl --check
 ```
 
+### F. Compile PDF Deliverables
+```bash
+# Compile 3-page scanned reflection document
+python tools/generate_reflection_pdf.py
+
+# Compile comprehensive 9-page project report
+python tools/generate_report_pdf.py
+```
+
 ---
 
 ## 5. Measured Experimental Results
@@ -185,3 +199,4 @@ In compliance with project specifications prohibiting large binary files in git 
   - `models/v1/model.sha256`: `95053ae63c454e1d5b57a8dc9cbdc5483304e61dea7b7ba10e4eee0e679e1452`
   - `models/v2/model.sha256`: `9d8678e277dad0b4c5630b326a6178e3ae9cb292ec216c8207f41d15f1e2c47a`
   - `datasets/v1/train.sha256`: `b6e8e5ddad44ee3e5c7bfa6b2fac230befc3b6c09ae80a29f4ce6597bea5aacf`
+

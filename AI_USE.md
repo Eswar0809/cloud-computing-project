@@ -1,9 +1,10 @@
 # AI Assistance Disclosure (AI_USE.md)
 
-**Student Name:** Nemapu Navaneeth  
-**Roll Number:** 230101086  
+**Student Name:** Chittoju Eswar Chandra vidya sagar  
+**Roll Number:** 230101087  
 **Course:** CS3081 - Cloud Computing  
 **Project:** Knowledge Distillation and Deployment of a Lightweight Command-Parsing Language Model on a Local Cloud  
+**GitHub Repository:** https://github.com/Eswar0809/cloud-computing-project  
 
 ---
 
@@ -50,3 +51,4 @@ All code, manifests, and mathematical proofs generated with AI assistance were s
    - Benchmarked inference latency, throughput, and memory consumption directly on host hardware using `psutil` and Locust.
 4. **Security & Credential Auditing:**
    - Conducted repository scans using Gitleaks to guarantee that zero API keys, secrets, or passwords are committed to source control.
+
