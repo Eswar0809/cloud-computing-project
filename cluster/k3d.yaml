@@ -1,0 +1,31 @@
+apiVersion: k3d.io/v1alpha5
+kind: Simple
+metadata:
+  name: command-parser-cluster
+servers: 1
+agents: 1
+kubeAPI:
+  hostIP: "0.0.0.0"
+  hostPort: "6443"
+ports:
+  - port: 8080:80
+    nodeFilters:
+      - loadbalancer
+  - port: 8443:443
+    nodeFilters:
+      - loadbalancer
+  - port: 8333:8333
+    nodeFilters:
+      - loadbalancer
+registries:
+  create:
+    name: "k3d-registry.localhost"
+    host: "0.0.0.0"
+    hostPort: "5000"
+options:
+  k3d:
+    wait: true
+    timeout: "120s"
+  kubeconfig:
+    updateExisting: true
+    switchMode: true

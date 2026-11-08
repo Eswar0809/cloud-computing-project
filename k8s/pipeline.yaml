@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pipeline
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: s3-credentials
+  namespace: pipeline
+type: Opaque
+stringData:
+  AWS_ACCESS_KEY_ID: "any"
+  AWS_SECRET_ACCESS_KEY: "any"
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: teacher-worker-shard-0
+  namespace: pipeline
+spec:
+  template:
+    metadata:
+      labels:
+        app: teacher-worker
+        shard: "0"
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: worker
+          image: python:3.11-slim
+          command: ["sh", "-c"]
+          args:
+            - |
+              pip install --no-cache-dir boto3
+              python worker/worker.py
+          env:
+            - name: SHARD_INDEX
+              value: "0"
+            - name: SHARD_COUNT
+              value: "2"
+            - name: S3_ENDPOINT
+              value: "http://seaweedfs-s3.data.svc.cluster.local:8333"
+            - name: OLLAMA_HOST
+              value: "http://host.k3d.internal:11434"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: s3-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: s3-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: teacher-worker-shard-1
+  namespace: pipeline
+spec:
+  template:
+    metadata:
+      labels:
+        app: teacher-worker
+        shard: "1"
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: worker
+          image: python:3.11-slim
+          command: ["sh", "-c"]
+          args:
+            - |
+              pip install --no-cache-dir boto3
+              python worker/worker.py
+          env:
+            - name: SHARD_INDEX
+              value: "1"
+            - name: SHARD_COUNT
+              value: "2"
+            - name: S3_ENDPOINT
+              value: "http://seaweedfs-s3.data.svc.cluster.local:8333"
+            - name: OLLAMA_HOST
+              value: "http://host.k3d.internal:11434"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: s3-credentials
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: s3-credentials
+                  key: AWS_SECRET_ACCESS_KEY
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
