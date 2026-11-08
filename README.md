@@ -3,7 +3,7 @@
 
 - **Student Name:** Nemapu Navaneeth
 - **Roll Number:** 230101086
-- **GitHub Repository:** [https://github.com/NavaneethNemapu/cloud-command-parser](https://github.com/NavaneethNemapu/cloud-command-parser)
+- **GitHub Repository:** [https://github.com/NavaneethNemapu/Cloud-Command-Parser](https://github.com/NavaneethNemapu/Cloud-Command-Parser)
 - **Submission Tag:** `final`
 
 ---
