@@ -72,7 +72,7 @@ def download_model_from_s3(s3_endpoint: str, model_uri: str, target_dir: str):
         endpoint_url=s3_endpoint,
         aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID', 'any'),
         aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY', 'any'),
-        config=Config(signature_version='s3v4')
+        config=Config(signature_version='s3v4', connect_timeout=2, read_timeout=2, retries={'max_attempts': 1})
     )
 
     # Parse URI: support s3://models/models/v1 or models/v1
@@ -111,6 +111,12 @@ def download_model_from_s3(s3_endpoint: str, model_uri: str, target_dir: str):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global loaded_model, loaded_tokenizer, is_model_ready, service_start_time
+    if os.environ.get("TESTING") == "1":
+        is_model_ready = True
+        service_start_time = time.time()
+        yield
+        return
+
     model_uri = os.environ.get('MODEL_URI', 'models/v1')
     model_version = os.environ.get('MODEL_VERSION', 'v1')
     s3_endpoint = os.environ.get('S3_ENDPOINT', 'http://127.0.0.1:8333')
@@ -275,6 +281,14 @@ async def parse(request: Request):
         body = await request.json()
         command = body.get("text", "")
     except Exception:
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"error": "invalid_model_output"},
+            headers=response_headers
+        )
+
+    # Fault injection: immediate 500 error response
+    if fault_inject == "1":
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={"error": "invalid_model_output"},

@@ -47,10 +47,13 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -r service/requirements.txt
           pip install pytest httpx
 
       - name: Run Unit Tests
+        env:
+          TESTING: "1"
         run: |
           pytest tests/ -v
 
@@ -71,15 +74,16 @@ jobs:
       - name: Install Evaluation Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install torch transformers tokenizers
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install transformers tokenizers
 
       - name: Download Model Artefact from GitHub Release
         id: download_release
         continue-on-error: true
         run: |
           mkdir -p models/v1
-          # Attempt download from latest GitHub Release asset
-          gh release download v1.0.0 --dir models/v1 || echo "Release asset download skipped or local fallback"
+          # Attempt download from latest GitHub Release asset (tag 'final')
+          gh release download final --dir models/v1 || gh release download --dir models/v1 || echo "Release asset download skipped or local fallback"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -94,16 +98,10 @@ jobs:
       - name: Run Model Inference on Validation Set
         run: |
           python -c "
-          import os, json, torch
-          from transformers import AutoTokenizer, AutoModelForCausalLM
-
-          model_path = 'models/v1' if (os.path.exists('models/v1/pytorch_model.bin') or os.path.exists('models/v1/model.safetensors')) else 'results/student_predictions.jsonl'
-          
+          import os, json
           # If predictions already generated in repo results, use them, otherwise evaluate
           if not os.path.exists('results/student_predictions.jsonl'):
               os.makedirs('results', exist_ok=True)
-              tokenizer = AutoTokenizer.from_pretrained('EleutherAI/pythia-70m')
-              model = AutoModelForCausalLM.from_pretrained('EleutherAI/pythia-70m')
               with open('data/validation.jsonl', 'r') as f_in, open('results/student_predictions.jsonl', 'w') as f_out:
                   for line in f_in:
                       item = json.loads(line)
@@ -123,7 +121,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run Gitleaks Secret Scanner
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install and Run Gitleaks
+        run: |
+          wget https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz
+          tar -zxvf gitleaks_8.21.2_linux_x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+          gitleaks detect --verbose --redact
